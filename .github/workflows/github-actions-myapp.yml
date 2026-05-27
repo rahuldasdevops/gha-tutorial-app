@@ -15,8 +15,19 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Docker image build and push
+    - name: Docker image build
       uses: docker/build-push-action@v6
       with:
-        push: true
+        push: false
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:${{ env.SHA_SHORT }}
+    - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:${{ env.SHA_SHORT }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+    - name: Docker image push
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:${{ env.SHA_SHORT }}
