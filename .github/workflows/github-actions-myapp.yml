@@ -1,5 +1,7 @@
 name: App tutorial
-on: [push]
+on: 
+  push:
+    branches: ["main"]
 jobs:
   myapp-python-action:
     runs-on: ubuntu-latest
