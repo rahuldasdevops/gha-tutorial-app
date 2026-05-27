@@ -21,7 +21,7 @@ jobs:
         push: false
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:${{ env.SHA_SHORT }}
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@v0.24.0
+      uses: aquasecurity/trivy-action@v0.36.0
       with:
         image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:${{ env.SHA_SHORT }}'
         exit-code: '1'
